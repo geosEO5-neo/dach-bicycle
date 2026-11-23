@@ -20,9 +20,6 @@ Der Profiler warnt nicht nur vor fehlenden Tags, sondern analysiert die reale Ge
 * ⛰️ **Pendler-Check:** Warnt vor anstrengenden Steigungen (`incline > 8%`).
 * ⚠️ **Die "Todesweiche" (Straßenbahn-Kreuzungen):** Nutzt Vektormathematik, um den Kreuzungswinkel zwischen Radweg und Straßenbahnschienen (`railway=tram`) zu berechnen. Warnt bei extrem spitzen Winkeln (< 40°), bei denen akute Sturzgefahr durch Einfädeln besteht!
 
-*(Füge hier deinen Screenshot vom Arne-Karlsson-Park ein!)*
-> `![Todesweichen Profiler](pfad/zum/screenshot.png)`
-
 ### 2. A* Auto-Routing
 Ein integrierter, lokaler Routing-Algorithmus, der den kürzesten und legalen Weg für Fahrräder über das bestehende OSM-Netzwerk findet.
 * Bevorzugt Fahrradinfrastruktur (`cycleway`, `path`).
