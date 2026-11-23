@@ -1,0 +1,72 @@
+<?xml version="1.0" encoding="utf-8"?>
+<project name="DachBicycle" default="dist" basedir=".">
+    <!-- Plugin-Eigenschaften -->
+    <property name="plugin.author" value="D-A-CH Cycle Team / IAESTE Vienna LC IT"/>
+    <property name="plugin.class" value="org.openstreetmap.josm.plugins.dachbicycle.DachBicyclePlugin"/>
+    <property name="plugin.description" value="Ein umfassendes Plugin für die D-A-CH Rad- &amp; Verkehrsinfrastruktur"/>
+    <property name="plugin.link" value="https://www.iaeste.at/"/>
+    <property name="plugin.main.version" value="18000"/>
+
+    <!-- Verzeichnis-Struktur -->
+    <property name="src.dir" location="src"/>
+    <property name="lib.dir" location="lib"/>
+    <property name="resources.dir" location="resources"/>
+    <property name="build.dir" location="build"/>
+    <property name="dist.dir" location="dist"/>
+    <property name="plugin.jar" value="${dist.dir}/${ant.project.name}.jar"/>
+
+    <target name="init">
+        <mkdir dir="${build.dir}"/>
+        <mkdir dir="${dist.dir}"/>
+    </target>
+
+    <target name="compile" depends="init">
+        <javac srcdir="${src.dir}" destdir="${build.dir}" release="11" debug="true" includeantruntime="false" encoding="UTF-8">
+            <classpath>
+                <fileset dir="${lib.dir}" includes="**/*.jar"/>
+            </classpath>
+            <compilerarg value="-Xlint:deprecation"/>
+            <compilerarg value="-Xlint:unchecked"/>
+        </javac>
+    </target>
+
+    <target name="revision">
+        <tstamp>
+            <format property="plugin.date" pattern="yyyy-MM-dd'T'HH:mm:ss'Z'"/>
+        </tstamp>
+        <property name="plugin.version" value="local-build-v3.1"/>
+    </target>
+
+    <target name="dist" depends="compile,revision">
+        <!-- Kopiere die Ressourcen (Presets, Stile, etc.) -->
+        <copy todir="${build.dir}">
+            <fileset dir="${resources.dir}"/>
+            <!-- NEU: Kopiere auch die plugin.properties Datei -->
+            <fileset file="plugin.properties"/>
+        </copy>
+        
+        <jar destfile="${plugin.jar}" basedir="${build.dir}">
+            <manifest>
+                <attribute name="Author" value="${plugin.author}"/>
+                <attribute name="Plugin-Class" value="${plugin.class}"/>
+                <attribute name="Plugin-Date" value="${plugin.date}"/>
+                <attribute name="Plugin-Description" value="${plugin.description}"/>
+                <attribute name="Plugin-Link" value="${plugin.link}"/>
+                <attribute name="Plugin-Mainversion" value="${plugin.main.version}"/>
+                <attribute name="Plugin-Version" value="${plugin.version}"/>
+            </manifest>
+        </jar>
+    </target>
+
+    <target name="clean">
+        <delete dir="${build.dir}"/>
+        <delete dir="${dist.dir}"/>
+    </target>
+
+    <target name="install" depends="dist">
+        <property environment="env"/>
+        <copy file="${plugin.jar}" todir="${env.APPDATA}/JOSM/plugins" failonerror="false" verbose="true"/>
+        <copy file="${plugin.jar}" todir="${user.home}/.local/share/JOSM/plugins" failonerror="false" verbose="true"/>
+        <copy file="${plugin.jar}" todir="${user.home}/Library/JOSM/plugins" failonerror="false" verbose="true"/>
+    </target>
+</project>

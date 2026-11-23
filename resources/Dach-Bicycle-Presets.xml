@@ -1,0 +1,117 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<presets xmlns="http://josm.openstreetmap.de/tagging-preset-1.0"
+         author="D-A-CH Cycle Team / Gemini"
+         version="3.0-Master"
+         shortdescription="D-A-CH Rad- &amp; Verkehrsinfrastruktur"
+         description="Ein umfassendes Master-Preset für die detaillierte Erfassung von Rad- &amp; Fußverkehrsanlagen, Übergängen, Routen und Wartung in der D-A-CH-Region.">
+
+  <group name="Radwege &amp; Fahrradstraßen" icon="presets/transport/cycleway.svg">
+    <item name="Radweg (detailliert)" type="way" icon="presets/transport/cycleway.svg">
+      <label text="Radweg (Geh- und Radweg, Radschnellweg)"/>
+      <key key="highway" value="cycleway"/>
+      <combo key="bicycle" text="Radverkehr" values="designated,yes" display_values="Ausgewiesener Radweg,Erlaubt" default="designated"/>
+      <combo key="foot" text="Fußverkehr" values="no,yes,designated" display_values="Verboten,Erlaubt,Mitbenutzung ausgewiesen" default="no"/>
+      <combo key="segregated" text="Getrennte Führung Rad/Fuß" values=",yes,no" display_values=",Ja - getrennt,Nein - gemeinsam" default="no"/>
+      <text key="width" text="Breite in Metern (ERA: &gt;2.0, RVS: &gt;1.5)"/>
+      <combo key="surface" text="Oberfläche" values="asphalt,concrete,paving_stones,fine_gravel,gravel,unpaved" display_values="Asphalt,Beton,Pflastersteine,Feiner Schotter,Schotter,Unbefestigt" default="asphalt"/>
+      <combo key="smoothness" text="Fahrkomfort" values="excellent,good,intermediate,bad,very_bad" display_values="Ausgezeichnet,Gut,Mäßig,Schlecht,Sehr schlecht" default="good"/>
+      <check key="lit" text="Beleuchtung vorhanden" value_on="yes"/>
+      <check key="oneway:bicycle" text="Einbahnstraße für Radverkehr" value_on="yes"/>
+      <text key="operator" text="Betreiber (z.B. Bezirk, Land)"/>
+    </item>
+
+    <item name="Radfahrstreifen / Schutzstreifen" type="way" icon="presets/transport/cycleway_lane.svg">
+      <label text="Radfahrstreifen oder Schutzstreifen auf der Fahrbahn"/>
+      <key key="highway" value="primary,secondary,tertiary,residential,unclassified"/>
+      <key key="cycleway" value="lane"/>
+      <combo key="cycleway:lane" text="Führung" values="exclusive,advisory" display_values="Radfahrstreifen (durchgezogene Linie),Schutzstreifen (gestrichelte Linie)" default="exclusive"/>
+      <text key="cycleway:width" text="Breite Radstreifen"/>
+      <combo key="cycleway:surface:colour" text="Farbe" values=",red" display_values="Keine,Rot" delete_if_empty="true"/>
+      <combo key="cycleway:buffer" text="Pufferzone (z.B. zu parkenden Autos)" values=",yes,no" display_values=",Ja,Nein" default="no"/>
+      <text key="cycleway:buffer:width" text="Breite der Pufferzone"/>
+    </item>
+
+    <item name="Fahrradstraße" type="way" icon="presets/transport/bicycle_road.svg">
+      <label text="Fahrradstraße"/>
+      <key key="highway" value="residential,living_street,service"/>
+      <key key="bicycle_road" value="yes"/>
+      <key key="bicycle" value="designated"/>
+      <combo key="motor_vehicle" text="Kraftfahrzeuge" values="no,destination,yes" display_values="Verboten,Anlieger frei,Erlaubt" default="destination"/>
+      <combo key="maxspeed" text="Höchstgeschwindigkeit" values="30,20,10" display_values="30 km/h,20 km/h,10 km/h" default="30"/>
+      <combo key="surface" text="Oberfläche" values="asphalt,paving_stones" display_values="Asphalt,Pflastersteine" default="asphalt"/>
+    </item>
+  </group>
+
+  <group name="Kreuzungen &amp; Übergänge" icon="presets/transport/crossing.svg">
+    <item name="Überweg (umfassend)" type="node" icon="presets/transport/crossing.svg">
+        <link href="https://wiki.openstreetmap.org/wiki/DE:Tag:highway=crossing" />
+        <key key="highway" value="crossing" />
+        <label text="Allgemeine Eigenschaften" />
+        <combo key="crossing" text="Art des Überwegs" values="traffic_signals,uncontrolled,unmarked" display_values="Signalisierter Übergang (Ampel),Geregelter Übergang (z.B. Zebrastreifen),Unmarkierter Übergang" default="traffic_signals" />
+        <combo key="crossing:markings" text="Markierungstyp" values=",zebra,lines,dots,ladder,surface" display_values="Keine,Zebrastreifen,Linien,Punkte,Leiter,Farbige Oberfläche" delete_if_empty="true" />
+        <space />
+        <label text="Zugangsrechte" />
+        <checkgroup columns="2">
+            <check key="foot" text="Für Fußgänger" value_on="designated" value_off="no" default="on" />
+            <check key="bicycle" text="Für Radfahrer" value_on="designated" value_off="no" default="off" />
+        </checkgroup>
+        <check key="segregated" text="Getrennte Führung (Fuß/Rad)" default="off" />
+        <space />
+        <label text="Barrierefreiheit &amp; Sicherheit" />
+        <combo key="tactile_paving" text="Taktiles Leitsystem" values=",yes,no" display_values="Nicht spezifiziert,Ja,Nein" default="yes"/>
+        <combo key="kerb" text="Bordstein" values=",lowered,flush" display_values="Nicht spezifiziert,Abgesenkt,Niveaugleich" default="flush"/>
+        <check key="crossing:island" text="Verkehrsinsel vorhanden?" default="off" />
+        <check key="lit" text="Beleuchtet?" default="on" />
+        <space />
+        <optional text="Details zur Ampelanlage">
+            <check key="button_operated" text="Anforderungstaster?" default="on" />
+            <combo key="traffic_signals:sound" text="Akustisches Signal" values=",yes,no" display_values="Nicht spezifiziert,Ja,Nein" delete_if_empty="true" />
+            <combo key="traffic_signals:vibration" text="Vibrationssignal" values=",yes,no" display_values="Nicht spezifiziert,Ja,Nein" delete_if_empty="true" />
+        </optional>
+    </item>
+  </group>
+
+  <group name="Radrouten &amp; Netzwerke" icon="presets/route/bicycle.svg">
+     <item name="EuroVelo / D-Route / Regionale Route" type="relation" icon="presets/route/bicycle.svg">
+      <label text="Nationale / Internationale Radroute"/>
+      <key key="type" value="route"/>
+      <key key="route" value="bicycle"/>
+      <combo key="network" text="Netzwerk-Ebene" values="icn,ncn,rcn" display_values="International (icn),National (ncn),Regional (rcn)" default="rcn"/>
+      <text key="ref" text="Referenz (z.B. EV1, D4, R1)"/>
+      <text key="name" text="Name der Route"/>
+      <text key="operator" text="Betreiber"/>
+      <text key="distance" text="Länge in km"/>
+      <text key="website" text="Website"/>
+    </item>
+  </group>
+
+  <group name="Service und Wartung" icon="presets/amenity/bicycle_repair_station.svg">
+    <item name="Fahrrad-Reparaturstation" type="node" icon="presets/amenity/bicycle_repair_station.svg">
+      <label text="Öffentliche Fahrrad-Reparaturstation"/>
+      <key key="amenity" value="bicycle_repair_station"/>
+      <text key="operator" text="Betreiber"/>
+      <combo key="brand" text="Hersteller" values="IBOMBO,Dero,Bike Fixstation" />
+      <check key="service:bicycle:pump" text="Luftpumpe" value_on="yes" default="on"/>
+      <check key="service:bicycle:tools" text="Werkzeug" value_on="yes" default="on"/>
+      <check key="service:bicycle:stand" text="Montageständer" value_on="yes" default="on"/>
+      <combo key="opening_hours" text="Öffnungszeiten" values="24/7" default="24/7"/>
+      <text key="lastcheck:date" text="Letztes Wartungsdatum (YYYY-MM-DD)"/>
+    </item>
+    <item name="Bike and Ride Anlage" type="node,area" icon="presets/transport/bicycle_parking.svg">
+      <label text="Fahrradparkplatz (Bike and Ride)"/>
+      <key key="amenity" value="bicycle_parking"/>
+      <text key="capacity" text="Anzahl Stellplätze"/>
+      <combo key="bicycle_parking" text="Parktyp" values="stands,wall_loops,shed,lockers,building" display_values="Anlehnbügel,Wandhalter,Überdacht,Schließfächer,Parkhaus" default="stands"/>
+      <combo key="covered" text="Überdachung" values="yes,no,partial" display_values="Vollständig,Nein,Teilweise" default="no"/>
+      <check key="supervised" text="Bewacht" value_on="yes"/>
+      <text key="operator" text="Betreiber (DB, BVG, etc.)"/>
+    </item>
+     <item name="Radweg-Wartungsprotokoll" type="way" icon="presets/misc/fixme.svg">
+      <label text="Wartungs- &amp; Qualitätsinfos für Wege"/>
+      <combo key="surface:condition" text="Oberflächenzustand" values="excellent,good,fair,poor,very_poor" display_values="Ausgezeichnet,Gut,Ordentlich,Schlecht,Sehr schlecht"/>
+      <text key="maintenance:last" text="Letzte Wartung (YYYY-MM-DD)"/>
+      <combo key="winter_service" text="Winterdienst" values="yes,limited,no" display_values="Ja,Eingeschränkt,Nein" default="no"/>
+      <text key="fixme" text="Reparaturbedarf beschreiben"/>
+    </item>
+  </group>
+</presets>

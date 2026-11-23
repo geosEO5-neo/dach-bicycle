@@ -1,0 +1,7 @@
+# Ant Build-Ordner (werden lokal neu generiert)
+build/
+dist/
+
+# JOSM spezifische temporäre Dateien
+*~
+*.class

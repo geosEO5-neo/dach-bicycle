@@ -1,0 +1,128 @@
+/*
+ * MASTER JOSM MapCSS Stil für D-A-CH Rad- & Verkehrsinfrastruktur
+ * Version: 3.0-Master
+ * Autor: D-A-CH Cycle Team / Gemini
+ * Beschreibung: Kombiniert Stile für Radwege, detaillierte Übergänge,
+ * Routen-Netzwerke und Servicepunkte zu einem umfassenden Stil.
+ */
+meta {
+    title: "D-A-CH Rad & Verkehr Master-Stil";
+    version: "3.0-Master";
+    author: "D-A-CH Cycle Team / Gemini";
+    description: "Umfassender Stil für Radwege, Übergänge, Routen und mehr.";
+}
+
+/* =================================================================== */
+/* TEIL 1: RADWEGE & FAHRRADSTRASSEN                                   */
+/* =================================================================== */
+
+way[highway=cycleway] {
+    width: 4;
+    color: #0073E6; /* Standard-Blau */
+    z-index: 10;
+}
+
+/* Breiten-basierte Visualisierung */
+way[highway=cycleway][width] {
+    width: eval(tag("width") * 2 + 2);
+}
+way[highway=cycleway][width][width<"1.8"] { color: #FF3300; /* Zu schmal */ }
+way[highway=cycleway][width][width>="1.8"][width<"2.5"] { color: #FF9900; /* OK */ }
+way[highway=cycleway][width][width>="2.5"] { color: #00CC00; /* Exzellent */ }
+
+/* Oberflächen-Visualisierung */
+way[highway=cycleway][surface=asphalt] { casing-width: 1; casing-color: #333333; }
+way[highway=cycleway][surface=paving_stones] { casing-width: 1; casing-color: #999999; dashes: 6,2; }
+way[highway=cycleway][surface=gravel] { casing-width: 1; casing-color: #B8860B; dashes: 8,4; }
+way[highway=cycleway][surface=unpaved] { casing-width: 1; casing-color: #8B4513; dashes: 12,6; }
+
+/* Radfahrstreifen / Schutzstreifen */
+way[cycleway=lane] { width: 3; color: #0099FF; z-index: 8; }
+way[cycleway:lane=advisory] { dashes: 10,10; }
+
+/* Fahrradstraßen */
+way[bicycle_road=yes] {
+    width: 8; color: #FF6600; z-index: 12;
+    text: "Fahrradstraße"; text-color: white; font-size: 9;
+    text-halo-color: #FF6600; text-halo-radius: 2;
+}
+
+/* Rote Oberflächenmarkierung (z.B. an Kreuzungen) */
+way[highway=cycleway][surface:colour=red] {
+    casing-width: 8; casing-color: #d63131; casing-opacity: 0.7; z-index: 14;
+}
+
+/* =================================================================== */
+/* TEIL 2: ÜBERGÄNGE & KREUZUNGEN                                      */
+/* =================================================================== */
+
+node|z16-[highway=crossing] {
+    icon-image: "presets/transport/crossing.svg";
+    icon-width: 18;
+}
+
+node|z16-[highway=crossing][crossing=traffic_signals] {
+    icon-image: "presets/transport/traffic_signals.svg";
+    icon-width: 20;
+}
+
+/* Gelber Halo für taktiles Leitsystem */
+node|z18-[highway=crossing][tactile_paving=yes]::casing {
+    symbol-shape: circle; symbol-size: 22;
+    symbol-stroke-color: yellow; symbol-stroke-width: 2.5;
+    symbol-stroke-opacity: 0.9; z-index: -1;
+}
+
+/* Cyan-farbener Punkt für Beleuchtung */
+node|z18-[highway=crossing][lit=yes]::lit_indicator {
+    symbol-shape: circle; symbol-size: 6;
+    symbol-fill-color: cyan; symbol-offset-x: 10;
+    symbol-offset-y: -10; z-index: 1;
+}
+
+/* Overlays für Nutzerrechte */
+node|z18-[highway=crossing][foot=designated]::foot_indicator {
+    symbol-shape: square; symbol-size: 8;
+    symbol-fill-color: #008000; /* Dunkelgrün */
+    symbol-stroke-color: white; symbol-stroke-width: 1;
+    symbol-offset-x: -8; symbol-offset-y: 8;
+}
+node|z18-[highway=crossing][bicycle=designated]::bike_indicator {
+    symbol-shape: circle; symbol-size: 8;
+    symbol-fill-color: blue; symbol-stroke-color: white;
+    symbol-stroke-width: 1; symbol-offset-x: 8;
+    symbol-offset-y: 8;
+}
+
+/* =================================================================== */
+/* TEIL 3: RADROUTEN                                                 */
+/* =================================================================== */
+
+relation[route=bicycle][network=icn]::highlight { width: 6; color: #0033AA; opacity: 0.5; z-index: 20; }
+relation[route=bicycle][network=ncn]::highlight { width: 5; color: #CC0000; opacity: 0.5; z-index: 19; }
+relation[route=bicycle][network=rcn]::highlight { width: 4; color: #00AA00; opacity: 0.5; z-index: 18; }
+
+relation[route=bicycle][ref] {
+    text: ref; text-color: white; text-position: line;
+    font-size: 10; font-weight: bold; text-halo-radius: 1; text-halo-color: black;
+}
+
+/* =================================================================== */
+/* TEIL 4: SERVICE & WARTUNG                                         */
+/* =================================================================== */
+
+node[amenity=bicycle_repair_station] {
+    icon-image: "presets/amenity/bicycle_repair_station.svg";
+    icon-width: 22; text: auto;
+}
+
+node[amenity=bicycle_parking] {
+    icon-image: "presets/transport/bicycle_parking.svg";
+    icon-width: 20; text: auto;
+}
+
+/* Wartungshinweise */
+way[fixme] {
+    text: "WARTUNG!"; text-color: red; text-position: line;
+    font-size: 9; font-weight: bold; text-halo-radius: 2; text-halo-color: yellow;
+}

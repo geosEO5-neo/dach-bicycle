@@ -1,0 +1,87 @@
+/*
+ * MASTER JOSM MapCSS Validator für D-A-CH Radverkehrsinfrastruktur
+ * Version: 3.0-Master
+ * Autor: D-A-CH Cycle Team / Gemini
+ * Beschreibung: Umfassende Validierungsregeln für Radverkehrsqualität.
+ */
+
+meta {
+    title: "D-A-CH Radverkehr Master-Validator";
+    version: "3.0-Master";
+    description: "Validierungsregeln für Radverkehrsinfrastruktur im D-A-CH Raum";
+    author: "D-A-CH Cycle Team / Gemini";
+}
+
+/* ===== BREITEN-VALIDIERUNG (D-A-CH) ===== */
+way[highway=cycleway][width][width<"1.5"] {
+    throwWarning: tr("Radweg unter Mindestbreite von 1,50m (ggf. ERA/RVS prüfen): {0}m", "{0.value}");
+    group: tr("D-A-CH Radverkehr - Breiten");
+    fixAdd: "fixme=Breite unter Standard - prüfen";
+}
+way[highway=cycleway][foot=designated][width][width<"2.5"] {
+    throwWarning: tr("Gemeinsamer Geh-/Radweg unter Mindestbreite von 2,50m: {0}m", "{0.value}");
+    group: tr("D-A-CH Radverkehr - Breiten");
+}
+
+/* ===== RADROUTEN-VALIDIERUNG ===== */
+*[bicycle=no] ∈ relation[route=bicycle] {
+    throwError: tr("Weg mit bicycle=no ist Teil einer Fahrradroute");
+    group: tr("D-A-CH Radverkehr - Routen");
+}
+relation[route=bicycle][!network] {
+    throwWarning: tr("Fahrradroute ohne Netzwerk-Klassifizierung (lcn/rcn/ncn/icn)");
+    group: tr("D-A-CH Radverkehr - Routen");
+    fixAdd: "network=lcn";
+}
+relation[route=bicycle][!name][!ref] {
+    throwWarning: tr("Fahrradroute ohne Name oder Referenz");
+    group: tr("D-A-CH Radverkehr - Routen");
+}
+/* EuroVelo & D-Routen */
+relation[route=bicycle][ref=~/^EV/][network!=icn] {
+    throwWarning: tr("EuroVelo Route sollte network=icn haben");
+    group: tr("D-A-CH Radverkehr - Routen");
+    fixAdd: "network=icn";
+}
+relation[route=bicycle][ref=~/^D[0-9]/][network!=ncn] {
+    throwWarning: tr("D-Route sollte network=ncn haben");
+    group: tr("D-A-CH Radverkehr - Routen");
+    fixAdd: "network=ncn";
+}
+
+
+/* ===== OBERFLÄCHENQUALITÄT & WARTUNG ===== */
+way[highway=cycleway][!surface] {
+    throwWarning: tr("Radweg ohne Oberflächenangabe");
+    group: tr("D-A-CH Radverkehr - Oberfläche");
+}
+way[highway=cycleway][surface=asphalt][smoothness=very_bad] {
+    throwWarning: tr("Asphaltierter Radweg mit sehr schlechtem Fahrkomfort - Wartung nötig?");
+    group: tr("D-A-CH Radverkehr - Oberfläche");
+}
+way[highway=cycleway][surface:condition=poor][!fixme] {
+    throwWarning: tr("Radweg in schlechtem Zustand ohne Reparaturhinweis");
+    group: tr("D-A-CH Radverkehr - Wartung");
+    fixAdd: "fixme=Oberflächensanierung erforderlich";
+}
+/* Veraltete Wartungschecks */
+node[amenity=bicycle_repair_station][lastcheck:date][eval(days_since(date(tag("lastcheck:date"))))>365] {
+    throwWarning: tr("Reparaturstation seit über einem Jahr nicht geprüft");
+    group: tr("D-A-CH Radverkehr - Wartung");
+}
+way[highway=cycleway][maintenance:last][eval(days_since(date(tag("maintenance:last"))))>1095] {
+    throwWarning: tr("Radweg seit über 3 Jahren nicht gewartet");
+    group: tr("D-A-CH Radverkehr - Wartung");
+}
+
+/* ===== SERVICE-INFRASTRUKTUR ===== */
+node[amenity=bicycle_repair_station][!service:bicycle:pump][!service:bicycle:tools] {
+    throwWarning: tr("Fahrrad-Reparaturstation ohne Angabe der verfügbaren Services");
+    group: tr("D-A-CH Radverkehr - Service");
+}
+
+/* ===== FAHRRADSTRASSEN ===== */
+way[bicycle_road=yes][maxspeed][maxspeed>"30"] {
+    throwWarning: tr("Fahrradstraße mit Höchstgeschwindigkeit über 30 km/h");
+    group: tr("D-A-CH Radverkehr - Fahrradstraße");
+}
